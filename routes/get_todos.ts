@@ -9,11 +9,13 @@ const pool = new pg.Pool({
 
 export default {
   method: "GET",
-  path: "/todos",
+  path: "/todo",
   async handler(req) {
-    //const name = req.query.get("name") || "stranger";
+   const filterDone = req.params.filterDone ? true : false;
+    console.log(req.params, filterDone);
     const { rows: todos } = await pool.query(
-      "SELECT name, description, done from todos",
+      "SELECT name, description, done from todo where done = $1",
+      [filterDone]
     );
 
     return Response.json(todos, { status: 200 });
